@@ -70,7 +70,7 @@ CREATE TABLE comment (
 INSERT INTO user (username, password_hash, role)
 VALUES (
   'admin',
-  '$2a$10$9zZrT8Y9o2rQpU8vF6g7yOq6dJw8l0e1mQ1uP0j6oBqGm0YqvQb2m',
+  '$2b$10$ZlBEpiaUveuOlTUM8p2O6OH.xmapVGgpaPIx1NMOiHasCngDYkjCm',
   'ADMIN'
 );
 

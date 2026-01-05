@@ -1,20 +1,24 @@
 @baseUrl = http://localhost:8080
-@username = u{{$timestamp}}
 @password = Passw0rd!
 
 ### 1) Health
 GET {{baseUrl}}/api/health
 
-### 2) 注册普通用户（每次用时间戳避免重复）
+### 2) 注册普通用户：用户名在这里生成（每次唯一）
 POST {{baseUrl}}/api/auth/register
 Content-Type: application/json
 
 {
-  "username": "{{username}}",
+  "username": "u{{$timestamp}}",
   "password": "{{password}}"
 }
+> {%
+    if (response.body && response.body.data && response.body.data.username) {
+        client.global.set("username", response.body.data.username);
+    }
+%}
 
-### 3) 普通用户登录，保存 tokenUser
+### 3) 普通用户登录（使用上一步保存的 username），保存 tokenUser
 POST {{baseUrl}}/api/auth/login
 Content-Type: application/json
 
@@ -22,12 +26,16 @@ Content-Type: application/json
   "username": "{{username}}",
   "password": "{{password}}"
 }
-> {% client.global.set("tokenUser", response.body.data.token); %}
+> {%
+    if (response.body && response.body.data && response.body.data.token) {
+        client.global.set("tokenUser", response.body.data.token);
+    }
+%}
 
 ### 4) 未带 token 访问 admin（应 401）
 GET {{baseUrl}}/api/admin/ping
 
-### 5) admin 登录，保存 tokenAdmin
+### 5) admin 登录，保存 tokenAdmin（前提：你已执行 SQL 更新 admin 的 password_hash）
 POST {{baseUrl}}/api/auth/login
 Content-Type: application/json
 
@@ -35,7 +43,11 @@ Content-Type: application/json
   "username": "admin",
   "password": "Admin@123456"
 }
-> {% client.global.set("tokenAdmin", response.body.data.token); %}
+> {%
+    if (response.body && response.body.data && response.body.data.token) {
+        client.global.set("tokenAdmin", response.body.data.token);
+    }
+%}
 
 ### 6) 带普通用户 token 访问 admin（应 403）
 GET {{baseUrl}}/api/admin/ping
