@@ -1,0 +1,46 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: mininews-server
+
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://127.0.0.1:3306/mininews?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
+    username: root
+    password: 5280360
+
+  jackson:
+    time-zone: Asia/Shanghai
+    date-format: yyyy-MM-dd HH:mm:ss
+
+  servlet:
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 20MB
+
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate:
+        show_sql: false
+        format_sql: false
+        jdbc:
+          time_zone: Asia/Shanghai
+
+logging:
+  level:
+    root: info
+    org.hibernate.SQL: off
+    org.hibernate.orm.jdbc.bind: off
+
+mininews:
+  upload-dir: uploads
+  jwt:
+    # 请替换成你自己的随机长字符串（建议 >= 32 字符）
+    secret: "CHANGE_ME_TO_A_LONG_RANDOM_SECRET_2026_01_06"
+    # token 有效期（秒）：这里默认 1 天
+    ttl-seconds: 86400

@@ -1,0 +1,26 @@
+# ===== OS / Editor =====
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# IntelliJ / IDEA
+.idea/
+*.iml
+out/
+
+# VSCode
+.vscode/
+
+# ===== Java / Maven =====
+server/target/
+*.log
+
+# ===== Node / uniapp =====
+uniapp/node_modules/
+uniapp/unpackage/
+uniapp/dist/
+uniapp/.hbuilderx/
+uniapp/.idea/
+
+# ===== Env / Secrets (if any) =====
+*.env

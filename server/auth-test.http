@@ -1,0 +1,66 @@
+@baseUrl = http://localhost:8080
+@username = u{{$timestamp}}
+@password = Passw0rd!
+
+### 1) Health
+GET {{baseUrl}}/api/health
+
+### 2) 注册普通用户（每次用时间戳避免重复）
+POST {{baseUrl}}/api/auth/register
+Content-Type: application/json
+
+{
+  "username": "{{username}}",
+  "password": "{{password}}"
+}
+
+### 3) 普通用户登录，保存 tokenUser
+POST {{baseUrl}}/api/auth/login
+Content-Type: application/json
+
+{
+  "username": "{{username}}",
+  "password": "{{password}}"
+}
+> {% client.global.set("tokenUser", response.body.data.token); %}
+
+### 4) 未带 token 访问 admin（应 401）
+GET {{baseUrl}}/api/admin/ping
+
+### 5) admin 登录，保存 tokenAdmin
+POST {{baseUrl}}/api/auth/login
+Content-Type: application/json
+
+{
+  "username": "admin",
+  "password": "Admin@123456"
+}
+> {% client.global.set("tokenAdmin", response.body.data.token); %}
+
+### 6) 带普通用户 token 访问 admin（应 403）
+GET {{baseUrl}}/api/admin/ping
+Authorization: Bearer {{tokenUser}}
+
+### 7) 带 admin token 访问 admin（应 200）
+GET {{baseUrl}}/api/admin/ping
+Authorization: Bearer {{tokenAdmin}}
+
+### 8) 不带 token 发评论（应 401）
+POST {{baseUrl}}/api/news/2/comments
+Content-Type: application/json
+
+{
+  "body": "匿名评论（应该失败）"
+}
+
+### 9) 带普通用户 token 发评论（应 200）
+POST {{baseUrl}}/api/news/2/comments
+Authorization: Bearer {{tokenUser}}
+Content-Type: application/json
+
+{
+  "body": "这是用户评论（应成功）"
+}
+
+### 10) 获取评论列表（GET 默认不要求登录）
+GET {{baseUrl}}/api/news/2/comments
