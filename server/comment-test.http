@@ -1,0 +1,30 @@
+@baseUrl = http://localhost:8080
+
+### 0) 拉取新闻列表，找一个 PUBLISHED 的 NEWS id（默认你有 id=2）
+GET {{baseUrl}}/api/contents?type=NEWS&page=1&size=10
+
+### 1) 不带 token 发评论（应 401）
+POST {{baseUrl}}/api/news/2/comments
+Content-Type: application/json
+
+{
+  "body": "匿名评论（应该失败）"
+}
+
+### 2) 带 token 发评论（应 200）
+POST {{baseUrl}}/api/news/2/comments
+Authorization: Bearer {{tokenUser}}
+Content-Type: application/json
+
+{
+  "body": "这是用户评论：{{ $timestamp }}"
+}
+
+### 3) 获取评论列表（分页：page=1 size=5）
+GET {{baseUrl}}/api/news/2/comments?page=1&size=5
+
+### 4) size 参数非法（应 400）
+GET {{baseUrl}}/api/news/2/comments?page=1&size=999
+
+### 5) 对不存在/非 PUBLISHED/非 NEWS 的内容拉评论（应 400 news not found）
+GET {{baseUrl}}/api/news/999999/comments?page=1&size=10

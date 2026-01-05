@@ -1,0 +1,16 @@
+@baseUrl = http://localhost:8080
+
+### 1) 列表：新闻（默认 page=1 size=10）
+GET {{baseUrl}}/api/contents?type=NEWS
+
+### 2) 列表：公告（指定分页）
+GET {{baseUrl}}/api/contents?type=NOTICE&page=1&size=10
+
+### 3) 详情：已发布新闻（把 2 改成你真实的已发布新闻 id）
+GET {{baseUrl}}/api/contents/2
+
+### 4) 详情：草稿/下线/删除的内容应访问不到（示例：3 若是草稿）
+GET {{baseUrl}}/api/contents/3
+
+### 5) type 参数非法（应返回统一 ApiResponse 的 400）
+GET {{baseUrl}}/api/contents?type=ABC
